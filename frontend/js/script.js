@@ -1,9 +1,5 @@
 
-// Screen Switcher
 
-const homeScreen = document.getElementById('home');
-const levelScreen = document.getElementById('levels');
-const gameScreen = document.getElementById('game');
 
 const scoreDisplay = document.getElementById("score");
 const timeDisplay = document.getElementById("time");
@@ -31,26 +27,6 @@ const stopTimer = () => {
     clearInterval(timerInterval);
 }
 
-function showHomeScreen(){
-    console.log('showing home screen');
-  homeScreen.style.display = 'flex';
-  levelScreen.style.display = 'none';
-  gameScreen.style.display = 'none';
-}
-
-function showLevelsScreen(){
-    console.log('showing levels screen');
-  homeScreen.style.display = 'none';
-  levelScreen.style.display = 'flex';
-  gameScreen.style.display = 'none';
-}
-
-function showGameScreen(level){
-    console.log('showing game screen :::: '+level);
-  homeScreen.style.display = 'none';
-  levelScreen.style.display = 'none';
-  gameScreen.style.display = 'flex';
-}
 
 // Card Image Setup
 function setUpCardImages(cardElement){
@@ -84,17 +60,32 @@ function setUpCardImages(cardElement){
 
 // Game board creation ----- 
 
+const params = new URLSearchParams(window.location.search);
+const level = params?.get('level');
+console.log("Selected level : "+level);
+
+const levelConfig = {
+    easy : {
+        rows : 4,
+        columns : 3
+    },
+    medium : {
+        rows : 4,
+        columns : 4
+    },
+    hard : {
+        rows : 4,
+        columns : 5
+    }
+    }
+
+console.log("Cards R & C ::: "+levelConfig[level]?.rows);
 
 const board= document.querySelector(".game-board");
-const templateCard = document.querySelector('.card').cloneNode(true);
+const templateCard = document.querySelector('.card')?.cloneNode(true);
 const buttons = document.querySelectorAll("[data-rows]");
-buttons.forEach(button => {
-    button.addEventListener("click", () => {
-        const rows= Number(button.dataset.rows);
-        const columns= Number(button.dataset.columns);
-        createGameBoard(rows, columns);
-    });
-});
+createGameBoard(levelConfig[level]?.rows, levelConfig[level]?.columns);
+
 
 // Fetching Emojis from API
 async function fetchEmojis(category = "smileys and people") {

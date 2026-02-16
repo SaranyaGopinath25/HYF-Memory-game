@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Chewy&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/levels.css">
+    <title>Memory Game</title>
+</head>
+<body>
+    <!-- Screen 2 : Level Selection -->
+        <div id="levels">
+          <h2>CHOOSE YOUR LEVEL</h2>
+          <p>Select your game level between easy, medium or hard!</p>
+          <div class="level">
+            <a href="game.html?level=easy">
+                <button data-rows="3" data-columns="4" class="level-btn">Easy</button>
+            </a>
+            <a href="game.html?level=medium">
+                <button data-rows="4" data-columns="4" class="level-btn">
+                    Medium
+                </button>
+            </a>
+            <a href="game.html?level=hard">
+                <button data-rows="4" data-columns="5" class="level-btn">Hard</button>
+            </a>
+          </div>
+          <a href="index.html">
+              <button id="back-btn">Back</button>
+          </a>
+        </div>
+    <script src="../js/script.js"></script>
+</body>
+</html>
