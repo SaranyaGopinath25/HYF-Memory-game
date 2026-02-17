@@ -1,0 +1,222 @@
+
+
+/* Game board */
+
+#game {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+}
+
+.game-board {
+  display: grid;
+  grid-template-rows: repeat(var(--rows), 1fr);
+  grid-template-columns: repeat(var(--columns), 1fr);
+  width: fit-content;
+  gap: clamp(8px, 1.5vw, 12px);
+  margin: clamp(20px, 3vh, 40px) auto;
+  padding: 0 1rem;
+  justify-items: center;
+  align-items: center;
+}
+
+/* Score panel */
+
+.score-panel {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 90%;
+  max-width: 600px;
+  font-size: clamp(1rem, 3vw, 1.5rem);
+  margin-top: clamp(15px, 2vh, 20px);
+  padding: clamp(8px, 1.5vw, 10px);
+  color: white;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 8px;
+  gap: clamp(1rem, 3vw, 2rem);
+}
+
+.score, .timer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+#score,
+#time {
+  display: inline-block;
+  width: 40px;
+  text-align: right;
+}
+
+/* Cards */
+
+.card {
+  width: clamp(60px, 12vw, 100px);
+  height: clamp(60px, 12vw, 100px);
+  perspective: 1000px;
+  cursor: pointer;
+}
+
+.card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+}
+
+.card-inner.flipped {
+  transform: rotateY(180deg);
+}
+
+.front,
+.back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+}
+
+.front {
+  background-color: #4CAF50;
+}
+
+.back {
+  background-color: #a65ceb;
+  transform: rotateY(180deg);
+}
+
+#cardImg {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: clamp(1.5rem, 6vw, 3rem);
+}
+
+/* Victory overlay */
+
+#victory-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.victory-box {
+  background: white;
+  padding: clamp(20px, 5vw, 40px);
+  border-radius: 20px;
+  text-align: center;
+  font-size: clamp(1rem, 3vw, 1.5rem);
+  animation: pop 0.4s ease;
+  margin: 1rem;
+  max-width: 90vw;
+}
+
+@keyframes pop {
+  from { transform: scale(0.7); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+/* Responsive Game Tweaks */
+@media (max-width: 768px) {
+  #game {
+    height: auto;
+    min-height: 100vh;
+    padding: 1rem 0;
+  }
+
+  .game-board {
+    max-width: 95vw;
+    gap: clamp(6px, 1.5vw, 10px);
+    margin: clamp(15px, 2vh, 30px) auto;
+  }
+
+  .card {
+    width: clamp(50px, 10vw, 85px);
+    height: clamp(50px, 10vw, 85px);
+  }
+
+  .score-panel {
+    flex-wrap: wrap;
+    width: 95%;
+    font-size: clamp(0.9rem, 2.5vw, 1.2rem);
+  }
+}
+
+@media (max-width: 480px) {
+  .game-board {
+    max-width: 98vw;
+    gap: 5px;
+    margin: 10px auto;
+  }
+
+  .card {
+    width: clamp(40px, 8vw, 70px);
+    height: clamp(40px, 8vw, 70px);
+  }
+
+  #cardImg {
+    font-size: clamp(1rem, 4vw, 2rem);
+  }
+
+  .score-panel {
+    width: 98%;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 8px;
+    font-size: 0.95rem;
+  }
+
+  .score, .timer {
+    width: 100%;
+    justify-content: center;
+  }
+
+  #score, #time {
+    width: auto;
+  }
+
+  .victory-box {
+    padding: 1.5rem;
+    font-size: 1rem;
+  }
+
+  .victory-box h2 {
+    font-size: clamp(1.2rem, 4vw, 1.8rem);
+    margin: 0 0 0.5rem 0;
+  }
+
+  .victory-box p {
+    margin: 0.4rem 0;
+    font-size: clamp(0.85rem, 2.5vw, 1rem);
+  }
+
+  .victory-box button {
+    margin-top: 1rem;
+    padding: 8px 12px;
+    font-size: 0.9rem;
+  }
+}

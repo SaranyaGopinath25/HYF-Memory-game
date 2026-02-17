@@ -1,0 +1,15 @@
+
+
+#levels {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.level {
+  display: flex;
+  margin-bottom: 70px;
+  gap: 30px;
+}

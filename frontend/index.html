@@ -13,62 +13,23 @@
     <title>Memory Game</title>
   </head>
   <body>
+
     <!-- Screen 1 : Home Screen -->
     <div id="home">
       <h1>MEMORY GAME!</h1>
       <p>Match the Emojis to win!</p>
-      <button onclick="showLevelsScreen()">Let's Play</button>
+      <form action="levels/levels.html" method="GET">
+        <input 
+        id="playerName" 
+        name = "playerName"
+        type="text" 
+        required
+        placeholder="Nickname"
+        />
+        <button>Ok, Let's Play!</button>
+      </form>
     </div>
 
-    <!-- Screen 2 : Level Selection -->
-    <div id="levels">
-      <h2>CHOOSE YOUR LEVEL</h2>
-      <p>Select your game level between easy, medium or hard!</p>
-      <div class="level">
-        <button data-rows="3" data-columns="4" onclick="showGameScreen('easy')" class="level-btn">Easy</button>
-        <button data-rows="4" data-columns="4" onclick="showGameScreen('medium')" class="level-btn">
-          Medium
-        </button>
-        <button data-rows="4" data-columns="5" onclick="showGameScreen('hard')" class="level-btn">Hard</button>
-      </div>
-      <button id="back-btn" onclick="showHomeScreen()">Back</button>
-    </div>
-
-    <!-- Screen 3 : Game Screen -->
-    <div id="game">
-      <div id="victory-overlay" class="hidden">
-        <div class="victory-box">
-          <h2>🎉 Congratulations!</h2>
-          <p>You completed the game!</p>
-          <p>Moves: <span id="final-score"></span></p>
-          <p>Time: <span id="final-time"></span>s</p>
-          <button onclick="showLevelsScreen()">Play Again</button>
-        </div>
-      </div>
-      <div class="score-panel"> 
-        <div class="score">Moves: <span id="score">0</span></div>
-        <div class="timer">Time: <span id="time">0</span>s</div>
-      </div>
-      <div class="game-board">
-        <!-- Cards will be generated here -->
-         <div class="card">
-            <div class="card-inner" onclick="setUpCardImages(this);">
-                <div class="front">
-                    Front
-                </div>
-                <div class="back" >
-                    <div id="cardImg">  </div>
-                    
-                </div>
-            </div>
-         </div>
-        </div>
-        <button id="back-btn" onclick="showLevelsScreen()">Back</button>
-      </div>
-    </div>
-
-
-
-    <script src="script.js"></script>
+    <script src="game/game.js"></script>
   </body>
 </html>
