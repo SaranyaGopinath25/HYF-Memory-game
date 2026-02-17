@@ -62,6 +62,13 @@ function setUpCardImages(cardElement){
 
 const params = new URLSearchParams(window.location.search);
 const level = params?.get('level');
+const player = params?.get('playerName');
+
+const linkElements = document.querySelectorAll(".level-page");
+linkElements.forEach(link => {
+    link.href = `../levels/levels.html?playerName=${player}`;
+});
+
 console.log("Selected level : "+level);
 
 const levelConfig = {
@@ -186,6 +193,7 @@ function disappearCards() {
         setTimeout(() => {
             document.getElementById("final-score").textContent = score;
             document.getElementById("final-time").textContent = timer;
+            document.getElementById("player-name-victory").textContent = player ? player+"!" : "Player!";
 
             document.getElementById("victory-overlay").classList.remove("hidden");
         }, 500);

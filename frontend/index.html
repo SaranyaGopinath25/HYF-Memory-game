@@ -18,9 +18,16 @@
     <div id="home">
       <h1>MEMORY GAME!</h1>
       <p>Match the Emojis to win!</p>
-      <a href="levels/levels.html">
-        <button>Let's Play</button>
-      </a>
+      <form action="levels/levels.html" method="GET">
+        <input 
+        id="playerName" 
+        name = "playerName"
+        type="text" 
+        required
+        placeholder="Nickname"
+        />
+        <button>Ok, Let's Play!</button>
+      </form>
     </div>
 
     <script src="game/game.js"></script>
