@@ -1,8 +1,11 @@
 import express from "express";
 import knex from "knex";
+import cors from "cors";
 
 const app = express();
 const port = 3000;
+app.use(cors());
+app.use(express.static("backend")); // Serve static files from the images folder
 
 // This connects to the database stored in the file mentioned below
 const knexInstance = knex({

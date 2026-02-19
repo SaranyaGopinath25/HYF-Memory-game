@@ -35,9 +35,6 @@ function setUpCardImages(cardElement){
 
     console.log('setting up card images');
     cardElement.classList.toggle('flipped');
-    // const backCard = document.getElementById('cardImg');
-    // backCard.src = './assets/cool.png';
-
     if(!timerStarted){
         startTimer();
         timerStarted = true;
@@ -73,8 +70,8 @@ console.log("Selected level : "+level);
 
 const levelConfig = {
     easy : {
-        rows : 4,
-        columns : 3
+        rows : 3,
+        columns : 4
     },
     medium : {
         rows : 4,
@@ -94,9 +91,9 @@ const buttons = document.querySelectorAll("[data-rows]");
 createGameBoard(levelConfig[level]?.rows, levelConfig[level]?.columns);
 
 
-// Fetching Emojis from API
-async function fetchEmojis(category = "smileys and people") {
-   try { const response = await fetch(`https://emojihub.yurace.pro/api/all/category/${category}`); 
+// Fetching Emojis
+async function fetchEmojis(difficulty) {
+   try { const response = await fetch(`http://localhost:3000/cards?difficulty=${difficulty}`); 
    if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
     }
@@ -110,8 +107,8 @@ async function fetchEmojis(category = "smileys and people") {
 
 // Random Emoji pairs Assignment
 
-async function assignEmojisToCards(count , category= "smileys and people") {
-    const allEmojis= await fetchEmojis(category);
+async function assignEmojisToCards(count , difficulty) {
+    const allEmojis= await fetchEmojis(difficulty);
     const shuffled= allEmojis.sort(() => 0.5 - Math.random());
     // prevent duplicate emojis in the selected pairs
     const selectedEmojis=[];
@@ -151,7 +148,7 @@ async function createGameBoard(rows, columns) {
 
     board.innerHTML = '';
 
-    const emojiPairs= await assignEmojisToCards(totalCards);
+    const emojiPairs= await assignEmojisToCards(totalCards, level);
 
     for (let i=0; i< totalCards; i++) {
         const card = templateCard.cloneNode(true);
@@ -160,8 +157,8 @@ async function createGameBoard(rows, columns) {
         card.dataset.emojiName = emoji.name;
 
         const imgElement = card.querySelector('#cardImg');
-        imgElement.innerHTML = emoji.htmlCode[0];
-        imgElement.removeAttribute("src");
+        imgElement.src = `http://localhost:3000/${emoji.image}`;
+        imgElement.alt = emoji.name;
 
         const cardInner = card.querySelector('.card-inner');
         cardInner.classList.remove('flipped');
@@ -196,6 +193,22 @@ function disappearCards() {
             document.getElementById("player-name-victory").textContent = player ? player+"!" : "Player!";
 
             document.getElementById("victory-overlay").classList.remove("hidden");
+
+            confetti({
+                particleCount: 500,
+                spread: 250,
+                scalar: Math.random() * 2.5 + 1,
+                origin: {y: 0.3, x: 0.5},
+                zIndex: 2001
+            });
+            confetti({
+                particleCount: 500,
+                spread: 300,
+                scalar: Math.random() * 2 + 1,
+                origin: {y: 0.9, x: 0.5},
+                zIndex: 2001
+            });
+
         }, 500);
     }
 
