@@ -16,6 +16,26 @@ const knexInstance = knex({
   useNullAsDefault: true,  // Omit warning in console
 });
 
+await knexInstance.raw(`
+  CREATE TABLE IF NOT EXISTS scores (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT NOT NULL,
+    score INTEGER NOT NULL,
+    difficulty TEXT NOT NULL CHECK (difficulty IN ('easy','medium','hard')),
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  )
+`);
+
+const existing = await knexInstance("scores").first();
+
+if (!existing) {
+  await knexInstance("scores").insert([
+    { username: "Alice", score: 120, difficulty: "easy" },
+    { username: "Bob", score: 200, difficulty: "medium" },
+    { username: "Charlie", score: 350, difficulty: "hard" }
+  ]);
+}
+
 app.get("/cards", async (req, res) => {
   try {
     const { difficulty } = req.query;
@@ -40,6 +60,52 @@ app.get("/cards", async (req, res) => {
       .limit(limit);
 
     res.json(cards);
+
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.post("/score", async (req, res) => {
+  try {
+    const { username, score, difficulty } = req.body;
+
+    const allowedDifficulties = ["easy", "medium", "hard"];
+
+    if (!username || !score || !allowedDifficulties.includes(difficulty)) {
+      return res.status(400).json({
+        error: "username, score and difficulty required",
+      });
+    }
+
+    await knexInstance("scores").insert({
+      username,
+      score,
+      difficulty,
+    });
+
+    res.status(201).json({ message: "Score saved successfully" });
+
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.get("/leaderboard", async (req, res) => {
+  try {
+    const { difficulty } = req.query;
+
+    const query = knexInstance("scores")
+      .select("username", "score", "difficulty")
+      .orderBy("score", "desc");
+
+    if (difficulty) {
+      query.where("difficulty", difficulty);
+    }
+
+    const results = await query.limit(10);
+
+    res.json(results);
 
   } catch (error) {
     res.status(500).json({ error: error.message });

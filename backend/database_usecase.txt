@@ -6,3 +6,29 @@ Response:
 [{"id":6,"name":"Computer","image":"images/computer.png"},{"id":11,"name":"Moneybag","image":"images/moneybag.png"},{"id":8,"name":"Crown","image":"images/crown.png"},{"id":13,"name":"Invader","image":"images/space_invader.png"},{"id":4,"name":"Bow-and-Arrow","image":"images/bow_and_arrow.png"},{"id":12,"name":"Skull-Crossbones","image":"images/skull_and_crossbones.png"}]
 
 difficulty -> easy, medium, hard
+
+API for saving score
+
+POST http://localhost:3000/score
+Content-Type: application/json
+
+request payload:  
+{
+  "username": "john",
+  "score": 180,
+  "difficulty": "hard"
+}
+
+
+API for showing leaderboard
+
+GET http://localhost:3000/leaderboard?difficulty=medium
+
+response: 
+[
+  {
+    "username": "Charlie",
+    "score": 350,
+    "difficulty": "hard"
+  }
+]
