@@ -1,14 +1,14 @@
 
 
 
-const scoreDisplay = document.getElementById("score");
+const scoreDisplay = document.getElementById("moves");
 const timeDisplay = document.getElementById("time");
 
 let firstCard = null;
 let secondCard = null;
 let lockBoard = false;  
 
-let score = 0;
+let moves = 0;
 let matchedPairs = 0;
 let totalPairs = 0;
 
@@ -46,8 +46,8 @@ function setUpCardImages(cardElement){
     } else {
         secondCard = cardElement;
 
-        score++;   
-        scoreDisplay.textContent = score;
+        moves++;   
+        scoreDisplay.textContent = moves;
 
         lockBoard = true;
         setTimeout(checkForMatch, 1000); 
@@ -129,7 +129,7 @@ async function createGameBoard(rows, columns) {
     secondCard = null;
     lockBoard = false;  
 
-    score = 0;
+    moves = 0;
     matchedPairs = 0;
     timer = 0;
     timerStarted = false;
@@ -188,7 +188,7 @@ function disappearCards() {
         stopTimer();
 
         setTimeout(() => {
-            document.getElementById("final-score").textContent = score;
+            document.getElementById("final-moves").textContent = moves;
             document.getElementById("final-time").textContent = timer;
             document.getElementById("player-name-victory").textContent = player ? player+"!" : "Player!";
 
