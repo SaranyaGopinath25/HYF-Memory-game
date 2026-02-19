@@ -180,7 +180,7 @@ function checkForMatch() {
         scoreDisplay.textContent = score;
     } else {
        unFlipCards();
-       score = score - 5;
+       score = Math.max(0, score - 5);
        scoreDisplay.textContent = score;
     }
 }
