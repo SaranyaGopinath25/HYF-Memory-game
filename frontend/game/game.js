@@ -95,7 +95,8 @@ createGameBoard(levelConfig[level]?.rows, levelConfig[level]?.columns);
 
 // Fetching Emojis
 async function fetchEmojis(difficulty) {
-   try { const response = await fetch(`http://localhost:3000/cards?difficulty=${difficulty}`); 
+//    try { const response = await fetch(`http://localhost:3000/cards?difficulty=${difficulty}`); 
+    try { const response = await fetch(`https://hyf-memory-game-pcw7.onrender.com/cards?difficulty=${difficulty}`); 
    if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
     }
@@ -160,7 +161,8 @@ async function createGameBoard(rows, columns) {
         card.dataset.emojiName = emoji.name;
 
         const imgElement = card.querySelector('#cardImg');
-        imgElement.src = `http://localhost:3000/${emoji.image}`;
+        // imgElement.src = `http://localhost:3000/${emoji.image}`;
+        imgElement.src = `https://hyf-memory-game-pcw7.onrender.com/${emoji.image}`;
         imgElement.alt = emoji.name;
 
         const cardInner = card.querySelector('.card-inner');
