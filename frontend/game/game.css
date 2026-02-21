@@ -30,13 +30,12 @@
   top: 24px;
   left: 50%;
   transform: translateX(-50%);
-  width: 50%;
+  width: clamp(280px, 50%, 520px);
   display: flex;
   justify-content: space-around;
   align-items: center;
-  font-size: clamp(1rem, 3vw, 1.5rem);
-  padding: 10px 24px;
-  color: rgba(56, 55, 55, 0.75);
+  padding: 12px 24px;
+  color: white;
   background: rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
@@ -47,18 +46,27 @@
   z-index: 1000;
 }
 
-.moves, .timer, .score {
+.score-panel .stat {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: 2px;
 }
 
-#moves,
-#time,
-#score {
-  display: inline-block;
-  width: 30px;
-  text-align: right;
+.score-panel .stat-label {
+  font-size: clamp(0.65rem, 1.5vw, 0.8rem);
+  color: rgba(255, 255, 255, 0.65);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.score-panel .stat-value {
+  font-size: clamp(1.2rem, 3vw, 1.8rem);
+  font-weight: bold;
+  color: white;
+  text-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  min-width: 2ch;
+  text-align: center;
 }
 
 /* Cards */
@@ -115,40 +123,7 @@
   object-fit: contain;
 }
 
-/* Victory overlay */
 
-#victory-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.7);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 2000;
-}
-
-.hidden {
-  display: none !important;
-}
-
-.victory-box {
-  background: white;
-  padding: clamp(20px, 5vw, 40px);
-  border-radius: 20px;
-  text-align: center;
-  font-size: clamp(1rem, 3vw, 1.5rem);
-  animation: pop 0.4s ease;
-  margin: 1rem;
-  max-width: 90vw;
-}
-
-@keyframes pop {
-  from { transform: scale(0.7); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
-}
 
 /* Responsive Game Tweaks */
 @media (max-width: 768px) {
@@ -173,9 +148,12 @@
     top: 0;
     width: 100%;
     border-radius: 0 0 16px 16px;
-    padding: 12px 8px;
+    padding: 10px 16px;
     border-top: none;
-    font-size: clamp(0.9rem, 2.5vw, 1.2rem);
+  }
+
+  .score-panel .stat-value {
+    font-size: clamp(1rem, 2.5vw, 1.4rem);
   }
 }
 
@@ -199,38 +177,18 @@
     top: 0;
     width: 100%;
     border-radius: 0 0 16px 16px;
-    padding: 10px 12px;
-    border-top: none;
-    font-size: clamp(0.8rem, 3.5vw, 1rem);
-    gap: 4px;
-  }
-
-  .moves, .timer, .score {
-    gap: 4px;
-  }
-
-  #moves, #time, #score {
-    width: auto;
-  }
-
-  .victory-box {
-    padding: 1.5rem;
-    font-size: 1rem;
-  }
-
-  .victory-box h2 {
-    font-size: clamp(1.2rem, 4vw, 1.8rem);
-    margin: 0 0 0.5rem 0;
-  }
-
-  .victory-box p {
-    margin: 0.4rem 0;
-    font-size: clamp(0.85rem, 2.5vw, 1rem);
-  }
-
-  .victory-box button {
-    margin-top: 1rem;
     padding: 8px 12px;
-    font-size: 0.9rem;
+    border-top: none;
+    gap: 4px;
   }
+
+  .score-panel .stat-value {
+    font-size: clamp(0.95rem, 3.5vw, 1.2rem);
+  }
+
+  .score-panel .stat-label {
+    font-size: clamp(0.55rem, 1.8vw, 0.7rem);
+  }
+
+
 }

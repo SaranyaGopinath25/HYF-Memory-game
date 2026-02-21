@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Chewy&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../index.css" />
+    <link rel="stylesheet" href="victory.css" />
+    <title>You Won! 🎉</title>
+</head>
+<body>
+    <div id="victory">
+        <div class="victory-card">
+            <h1>🎉 Congratulations!</h1>
+            <p class="player-name" id="player-name"></p>
+            <p class="sub">You completed the game!</p>
+
+            <div class="stats">
+                <div class="stat">
+                    <span class="stat-label">Moves</span>
+                    <span class="stat-value" id="stat-moves">—</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">Score</span>
+                    <span class="stat-value" id="stat-score">—</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">Time</span>
+                    <span class="stat-value" id="stat-time">—</span>
+                </div>
+            </div>
+
+            <div class="actions">
+                <a id="play-again-btn" href="../levels/levels.html">
+                    <button class="btn-primary">🎮 Play Again</button>
+                </a>
+                <a id="leaderboard-btn" href="../leaderBoard/leaderBoard.html">
+                    <button class="btn-secondary">🏆 Leaderboard</button>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script src="victory.js"></script>
+</body>
+</html>

@@ -1,236 +1,246 @@
+// ---- DOM refs ----
+const UI = {
+    moves: document.getElementById("moves"),
+    score: document.getElementById("score"),
+    time: document.getElementById("time"),
+    board: document.querySelector(".game-board"),
+};
 
+// ---- URL params ----
+const searchParams = new URLSearchParams(window.location.search);
+const DIFFICULTY = searchParams.get("level");
+const PLAYER_NAME = searchParams.get("playerName");
 
+// ---- Level config ----
+const LEVEL_CONFIG = {
+    easy: { rows: 3, cols: 4 },
+    medium: { rows: 4, cols: 4 },
+    hard: { rows: 4, cols: 5 },
+};
 
-const movesDisplay = document.getElementById("moves");
-const scoreDisplay = document.getElementById("score");
-const timeDisplay = document.getElementById("time");
+// ---- Game state ----
+const state = {
+    firstCard: null,
+    secondCard: null,
+    locked: false,
+    gameOver: false,
+    moves: 0,
+    score: 0,
+    matchedPairs: 0,
+    totalPairs: 0,
+};
 
-let firstCard = null;
-let secondCard = null;
-let lockBoard = false;  
+// ---- Timer state ----
+const clock = {
+    seconds: 0,
+    interval: null,
+    started: false,
+};
 
-let moves = 0;
-let score = 0;
-let matchedPairs = 0;
-let totalPairs = 0;
-
-let timer = 0;
-let timerInterval = null;
-let timerStarted = false;
-
-const startTimer = () => {
-    timerInterval = setInterval(() => {
-        timer++;
-        timeDisplay.textContent = timer;
+function startClock() {
+    clock.interval = setInterval(() => {
+        clock.seconds++;
+        UI.time.textContent = clock.seconds;
     }, 1000);
+    clock.started = true;
 }
 
-const stopTimer = () => {
-    clearInterval(timerInterval);
+function stopClock() {
+    clearInterval(clock.interval);
 }
 
+function resetClock() {
+    stopClock();
+    clock.seconds = 0;
+    clock.started = false;
+    UI.time.textContent = 0;
+}
 
-// Card Image Setup
-function setUpCardImages(cardElement){
-    if(lockBoard) return; // Prevent clicking when board is locked
-    if(cardElement === firstCard) return; // Prevent clicking the same card twice
+async function fetchCards(difficulty) {
+    const response = await fetch("http://localhost:3000/cards?difficulty=" + difficulty);
+    if (!response.ok) throw new Error("Failed to fetch cards: " + response.status);
+    return response.json();
+}
 
-    console.log('setting up card images');
-    cardElement.classList.toggle('flipped');
-    if(!timerStarted){
-        startTimer();
-        timerStarted = true;
+function submitScore(username, score, difficulty) {
+    return fetch("http://localhost:3000/score", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, score, difficulty }),
+    });
+}
+
+async function buildCardPairs(totalCards, difficulty) {
+    const allCards = await fetchCards(difficulty);
+
+    // Deduplicate by name, then pick enough unique pairs
+    const unique = [];
+    for (const card of allCards) {
+        if (!unique.some(c => c.name === card.name)) unique.push(card);
+        if (unique.length === totalCards / 2) break;
     }
 
-    if(!firstCard){
-        firstCard = cardElement;
-        return;
-    } else {
-        secondCard = cardElement;
-
-        moves++;   
-        movesDisplay.textContent = moves;
-
-        lockBoard = true;
-        setTimeout(checkForMatch, 1000); 
-    }    
+    // Duplicate each card to make a pair, then shuffle
+    return [...unique, ...unique].sort(() => Math.random() - 0.5);
 }
 
+// Clone the hidden template card once at startup
+const cardTemplate = UI.board.querySelector(".card")?.cloneNode(true);
+UI.board.querySelector(".card")?.remove();
 
-// Game board creation ----- 
+function createCardElement(emoji) {
+    const card = cardTemplate.cloneNode(true);
+    const inner = card.querySelector(".card-inner");
+    const img = card.querySelector("#cardImg");
 
-const params = new URLSearchParams(window.location.search);
-const level = params?.get('level');
-const player = params?.get('playerName');
+    card.dataset.emojiName = emoji.name;
+    card.style.display = "";
+    card.style.visibility = "visible";
+    img.src = "http://localhost:3000/" + emoji.image;
+    img.alt = emoji.name;
+    inner.classList.remove("flipped");
+    inner.addEventListener("click", () => onCardClick(inner));
 
-const linkElements = document.querySelectorAll(".level-page");
-linkElements.forEach(link => {
-    link.href = `../levels/levels.html?playerName=${player}`;
+    return card;
+}
+
+async function renderBoard() {
+    const config = LEVEL_CONFIG[DIFFICULTY];
+    if (!config) return;
+
+    const { rows, cols } = config;
+    const totalCards = rows * cols;
+
+    state.totalPairs = totalCards / 2;
+
+    UI.board.style.setProperty("--rows", rows);
+    UI.board.style.setProperty("--columns", cols);
+    UI.board.innerHTML = "";
+
+    const pairs = await buildCardPairs(totalCards, DIFFICULTY);
+    if (state.gameOver) return; // guard: game ended while awaiting
+
+    pairs.forEach(emoji => UI.board.appendChild(createCardElement(emoji)));
+}
+
+function resetState() {
+    state.firstCard = null;
+    state.secondCard = null;
+    state.locked = false;
+    state.gameOver = false;
+    state.moves = 0;
+    state.score = 0;
+    state.matchedPairs = 0;
+
+    UI.moves.textContent = 0;
+    UI.score.textContent = 0;
+
+    resetClock();
+}
+
+function unlockBoard() {
+    state.firstCard = null;
+    state.secondCard = null;
+    state.locked = false;
+}
+
+function updateScore(delta) {
+    state.score = Math.max(0, state.score + delta);
+    UI.score.textContent = state.score;
+}
+
+function incrementMoves() {
+    state.moves++;
+    UI.moves.textContent = state.moves;
+}
+
+function onCardClick(cardInner) {
+    if (state.gameOver) return;
+    if (state.locked) return;
+    if (cardInner === state.firstCard) return;
+
+    cardInner.classList.add("flipped");
+
+    if (!clock.started) startClock();
+
+    if (!state.firstCard) {
+        state.firstCard = cardInner;
+        return;
+    }
+
+    state.secondCard = cardInner;
+    state.locked = true;
+    incrementMoves();
+
+    setTimeout(evaluateMatch, 1000);
+}
+
+function getEmojiName(cardInner) {
+    return cardInner.closest(".card").dataset.emojiName;
+}
+
+async function evaluateMatch() {
+    if (state.gameOver) return;
+
+    const isMatch = getEmojiName(state.firstCard) === getEmojiName(state.secondCard);
+
+    if (isMatch) {
+        updateScore(+10);
+        await onMatchFound();
+    } else {
+        updateScore(-5);
+        flipCardsBack();
+    }
+}
+
+async function onMatchFound() {
+    state.firstCard.closest(".card").style.visibility = "hidden";
+    state.secondCard.closest(".card").style.visibility = "hidden";
+    state.matchedPairs++;
+
+    if (state.matchedPairs === state.totalPairs) {
+        await onGameComplete();
+        return;
+    }
+
+    unlockBoard();
+}
+
+function flipCardsBack() {
+    state.firstCard.classList.remove("flipped");
+    state.secondCard.classList.remove("flipped");
+    unlockBoard();
+}
+
+async function onGameComplete() {
+    stopClock();
+    state.locked = true;
+    state.gameOver = true;
+
+    const victoryUrl = buildVictoryUrl();
+
+    submitScore(PLAYER_NAME || "Player", state.score, DIFFICULTY)
+        .finally(() => { window.location.href = victoryUrl; });
+}
+
+function buildVictoryUrl() {
+    const query = new URLSearchParams({
+        playerName: PLAYER_NAME || "",
+        moves: state.moves,
+        score: state.score,
+        time: clock.seconds,
+        level: DIFFICULTY || "",
+    });
+    return "../endGamePanel/victory.html?" + query.toString();
+}
+
+document.querySelectorAll(".level-page").forEach(link => {
+    link.href = "../levels/levels.html?playerName=" + encodeURIComponent(PLAYER_NAME || "");
 });
 
-console.log("Selected level : "+level);
-
-const levelConfig = {
-    easy : {
-        rows : 3,
-        columns : 4
-    },
-    medium : {
-        rows : 4,
-        columns : 4
-    },
-    hard : {
-        rows : 4,
-        columns : 5
-    }
-    }
-
-console.log("Cards R & C ::: "+levelConfig[level]?.rows);
-
-const board= document.querySelector(".game-board");
-const templateCard = document.querySelector('.card')?.cloneNode(true);
-const buttons = document.querySelectorAll("[data-rows]");
-createGameBoard(levelConfig[level]?.rows, levelConfig[level]?.columns);
-
-
-// Fetching Emojis
-async function fetchEmojis(difficulty) {
-   try { const response = await fetch(`http://localhost:3000/cards?difficulty=${difficulty}`); 
-   if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    const emojis = await response.json();
-    return emojis;
-    } catch (error) {
-        console.error("Failed to fetch emojis:", error); 
-        return [];
-    }
+async function init() {
+    resetState();
+    await renderBoard();
 }
 
-// Random Emoji pairs Assignment
-
-async function assignEmojisToCards(count , difficulty) {
-    const allEmojis= await fetchEmojis(difficulty);
-    const shuffled= allEmojis.sort(() => 0.5 - Math.random());
-    // prevent duplicate emojis in the selected pairs
-    const selectedEmojis=[];
-    for (let i=0; i<shuffled.length && selectedEmojis.length < count / 2; i++) {
-        const alreadySelected = selectedEmojis.some(emoji => emoji.name === shuffled[i].name);
-        if (!alreadySelected) {
-            selectedEmojis.push(shuffled[i]);
-        }
-    }
-
-    const emojiPairs= [...selectedEmojis, ...selectedEmojis];
-    return emojiPairs.sort(() => 0.5 - Math.random());
-}   
-
-
-async function createGameBoard(rows, columns) {
-    firstCard = null;
-    secondCard = null;
-    lockBoard = false;  
-
-    moves = 0;
-    matchedPairs = 0;
-    timer = 0;
-    timerStarted = false;
-    stopTimer();
-
-    movesDisplay.textContent = 0;
-    scoreDisplay.textContent = 0;
-    timeDisplay.textContent = 0;
-
-    board.style.setProperty('--rows', rows);
-    board.style.setProperty('--columns', columns);
-    
-    const totalCards= rows * columns; 
-    totalPairs = totalCards / 2;
-
-    document.getElementById("victory-overlay").classList.add("hidden");
-
-    board.innerHTML = '';
-
-    const emojiPairs= await assignEmojisToCards(totalCards, level);
-
-    for (let i=0; i< totalCards; i++) {
-        const card = templateCard.cloneNode(true);
-        card.style.visibility = 'visible';
-        const emoji = emojiPairs[i];
-        card.dataset.emojiName = emoji.name;
-
-        const imgElement = card.querySelector('#cardImg');
-        imgElement.src = `http://localhost:3000/${emoji.image}`;
-        imgElement.alt = emoji.name;
-
-        const cardInner = card.querySelector('.card-inner');
-        cardInner.classList.remove('flipped');
-
-        board.appendChild(card);
-    }
-}
-
-// card matching logic
-function checkForMatch() {
-    const isMatch = firstCard.closest('.card').dataset.emojiName === secondCard.closest('.card').dataset.emojiName;
-
-    if(isMatch){
-        disappearCards();
-        score = score + 10;
-        scoreDisplay.textContent = score;
-    } else {
-       unFlipCards();
-       score = Math.max(0, score - 5);
-       scoreDisplay.textContent = score;
-    }
-}
-
-function disappearCards() {
-    firstCard.closest('.card').style.visibility = 'hidden';
-    secondCard.closest('.card').style.visibility = 'hidden';
-
-    matchedPairs++;
-
-    if(matchedPairs === totalPairs){
-        stopTimer();
-
-        setTimeout(() => {
-            document.getElementById("final-moves").textContent = moves;
-            document.getElementById("final-score").textContent = score;
-            document.getElementById("final-time").textContent = timer;
-            document.getElementById("player-name-victory").textContent = player ? player+"!" : "Player!";
-
-            document.getElementById("victory-overlay").classList.remove("hidden");
-
-            confetti({
-                particleCount: 500,
-                spread: 250,
-                scalar: Math.random() * 2.5 + 1,
-                origin: {y: 0.3, x: 0.5},
-                zIndex: 2001
-            });
-            confetti({
-                particleCount: 500,
-                spread: 300,
-                scalar: Math.random() * 2 + 1,
-                origin: {y: 0.9, x: 0.5},
-                zIndex: 2001
-            });
-
-        }, 500);
-    }
-
-    resetBoard();
-}
-
-function unFlipCards() {
-    firstCard.classList.remove('flipped');
-    secondCard.classList.remove('flipped');
-    resetBoard();
-}   
-
-function resetBoard() {
-    firstCard = null;
-    secondCard = null;
-    lockBoard = false;
-}   
+init();
