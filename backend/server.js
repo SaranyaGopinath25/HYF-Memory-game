@@ -5,6 +5,7 @@ import cors from "cors";
 const app = express();
 const port = 3000;
 app.use(cors());
+app.use(express.json());
 app.use(express.static("backend")); // Serve static files from the images folder
 
 // This connects to the database stored in the file mentioned below
@@ -72,17 +73,25 @@ app.post("/score", async (req, res) => {
 
     const allowedDifficulties = ["easy", "medium", "hard"];
 
-    if (!username || !score || !allowedDifficulties.includes(difficulty)) {
+    if (!username || score === undefined || !allowedDifficulties.includes(difficulty)) {
       return res.status(400).json({
         error: "username, score and difficulty required",
       });
     }
 
-    await knexInstance("scores").insert({
-      username,
-      score,
-      difficulty,
-    });
+    const existing = await knexInstance("scores")
+      .where({ username, difficulty })
+      .first();
+
+    if (existing) {
+      await knexInstance("scores")
+        .where({ username, difficulty })
+        .update({ score });
+
+      return res.status(200).json({ message: "Score updated successfully" });
+    }
+
+    await knexInstance("scores").insert({ username, score, difficulty });
 
     res.status(201).json({ message: "Score saved successfully" });
 
