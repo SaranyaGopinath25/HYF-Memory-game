@@ -1,5 +1,3 @@
-
-
 /* Game board */
 
 #game {
@@ -8,7 +6,9 @@
   justify-content: center;
   align-items: center;
   width: 100%;
-  height: 100vh;
+  min-height: 100vh;
+  padding-top: clamp(70px, 10vh, 100px);
+  padding-bottom: clamp(20px, 4vh, 40px);
 }
 
 .game-board {
@@ -26,32 +26,47 @@
 /* Score panel */
 
 .score-panel {
+  position: fixed;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: clamp(280px, 50%, 520px);
   display: flex;
   justify-content: space-around;
   align-items: center;
-  width: 90%;
-  max-width: 600px;
-  font-size: clamp(1rem, 3vw, 1.5rem);
-  margin-top: clamp(15px, 2vh, 20px);
-  padding: clamp(8px, 1.5vw, 10px);
+  padding: 12px 24px;
   color: white;
-  background: rgba(0, 0, 0, 0.5);
-  border-radius: 8px;
-  gap: clamp(1rem, 3vw, 2rem);
-}
-
-.moves, .timer, .score {
-  display: flex;
-  align-items: center;
+  background: rgba(46, 46, 46, 0.45);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
   gap: 8px;
+  z-index: 1000;
 }
 
-#moves,
-#time,
-#score {
-  display: inline-block;
-  width: 30px;
-  text-align: right;
+.score-panel .stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.score-panel .stat-label {
+  font-size: clamp(0.65rem, 1.5vw, 0.8rem);
+  color: rgba(255, 255, 255, 0.65);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.score-panel .stat-value {
+  font-size: clamp(1.2rem, 3vw, 1.8rem);
+  font-weight: bold;
+  color: white;
+  text-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  min-width: 2ch;
+  text-align: center;
 }
 
 /* Cards */
@@ -108,40 +123,7 @@
   object-fit: contain;
 }
 
-/* Victory overlay */
 
-#victory-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.7);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 2000;
-}
-
-.hidden {
-  display: none !important;
-}
-
-.victory-box {
-  background: white;
-  padding: clamp(20px, 5vw, 40px);
-  border-radius: 20px;
-  text-align: center;
-  font-size: clamp(1rem, 3vw, 1.5rem);
-  animation: pop 0.4s ease;
-  margin: 1rem;
-  max-width: 90vw;
-}
-
-@keyframes pop {
-  from { transform: scale(0.7); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
-}
 
 /* Responsive Game Tweaks */
 @media (max-width: 768px) {
@@ -163,9 +145,15 @@
   }
 
   .score-panel {
-    flex-wrap: wrap;
-    width: 95%;
-    font-size: clamp(0.9rem, 2.5vw, 1.2rem);
+    top: 0;
+    width: 100%;
+    border-radius: 0 0 16px 16px;
+    padding: 10px 16px;
+    border-top: none;
+  }
+
+  .score-panel .stat-value {
+    font-size: clamp(1rem, 2.5vw, 1.4rem);
   }
 }
 
@@ -177,8 +165,8 @@
   }
 
   .card {
-    width: clamp(40px, 8vw, 70px);
-    height: clamp(40px, 8vw, 70px);
+    width: clamp(40px, 14vw, 70px);
+    height: clamp(40px, 14vw, 70px);
   }
 
   #cardImg {
@@ -186,40 +174,26 @@
   }
 
   .score-panel {
-    width: 98%;
-    flex-direction: column;
-    gap: 0.5rem;
-    padding: 8px;
-    font-size: 0.95rem;
-  }
-
-  .moves, .timer {
+    top: 0;
     width: 100%;
-    justify-content: center;
-  }
-
-  #moves, #time {
-    width: auto;
-  }
-
-  .victory-box {
-    padding: 1.5rem;
-    font-size: 1rem;
-  }
-
-  .victory-box h2 {
-    font-size: clamp(1.2rem, 4vw, 1.8rem);
-    margin: 0 0 0.5rem 0;
-  }
-
-  .victory-box p {
-    margin: 0.4rem 0;
-    font-size: clamp(0.85rem, 2.5vw, 1rem);
-  }
-
-  .victory-box button {
-    margin-top: 1rem;
+    border-radius: 0 0 16px 16px;
     padding: 8px 12px;
-    font-size: 0.9rem;
+    border-top: none;
+    gap: 4px;
   }
+
+  .score-panel .stat-value {
+    font-size: clamp(0.95rem, 3.5vw, 1.2rem);
+  }
+
+  .score-panel .stat-label {
+    font-size: clamp(0.55rem, 1.8vw, 0.7rem);
+  }
+
+}
+
+#board-spinner {
+  display: none; 
+  width: 100%;
+  padding: 60px 0;
 }

@@ -5,55 +5,55 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Chewy&display=swap"
-      rel="stylesheet"
-    />
+    <link href="https://fonts.googleapis.com/css2?family=Chewy&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="../index.css">
     <link rel="stylesheet" href="game.css">
     <title>Memory Game</title>
 </head>
 <body>
-    <!-- Screen 3 : Game Screen -->
-        <div id="game">
-          <div id="victory-overlay" class="hidden">
-            <div class="victory-box">
-              <h2>🎉 Congratulations, <span id="player-name-victory"></span>🎉 </h2>
-              <p>You completed the game!</p>
-              <p>Moves: <span id="final-moves"></span></p>
-              <p>Score: <span id="final-score"></span> XP</p>
-              <p>Time: <span id="final-time"></span>s</p>
-              <a class="level-page" href="../levels/levels.html">
-                  <button>Play Again</button>
-              </a>
+    <div id="game">
+        <!-- Score Panel -->
+        <div class="score-panel">
+            <div class="stat">
+                <span class="stat-label">Moves</span>
+                <span class="stat-value" id="moves">0</span>
             </div>
-          </div>
-          <div class="score-panel"> 
-            <div class="moves">Moves: <span id="moves">0</span></div>
-            <div class="score">Score: <span id="score">0</span> XP</div>
-            <div class="timer">Time: <span id="time">0</span>s</div>
-          </div>
-          <div class="game-board">
-            <!-- Cards will be generated here -->
-             <div class="card">
-                <div class="card-inner" onclick="setUpCardImages(this);">
+            <div class="stat">
+                <span class="stat-label">Score</span>
+                <span class="stat-value" id="score">0</span>
+            </div>
+            <div class="stat">
+                <span class="stat-label">Time</span>
+                <span class="stat-value" id="time">0</span>
+            </div>
+        </div>
+
+        <!--Board spinner-->
+        <div class="spinner-wrapper" id="board-spinner">
+            <div class="spinner"></div>
+            <span class="spinner-label">Loading cards…</span>
+        </div>
+        <!-- Game Board -->
+        <div class="game-board">
+            <div class="card" style="display:none">
+                <div class="card-inner">
                     <div class="front">
                         <img src="../assets/HYF.png" alt="Card Front">
                     </div>
-                    <div class="back" >
+                    <div class="back">
                         <img id="cardImg" src="" alt="Card Back">
                     </div>
                 </div>
-             </div>
             </div>
-            <a class="level-page" href="../levels/levels.html">
-                <button id="back-btn">Back</button>
-            </a>
-          </div>
         </div>
-        
 
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+        <!-- Back Button -->
+        <a class="level-page" href="../levels/levels.html">
+            <button id="back-btn">Back</button>
+        </a>
+
+    </div>
+
     <script src="game.js"></script>
 </body>
 </html>

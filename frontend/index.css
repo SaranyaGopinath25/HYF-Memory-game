@@ -74,29 +74,65 @@ form {
 /* Bottom Navbar */
 .bottom-nav {
   position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  background: white;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 50%;
   display: flex;
   justify-content: space-around;
-  padding: 12px 0;
-  box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+  align-items: center;
+  background: rgba(46, 46, 46, 0.45);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.247);
+  border-radius: 16px;
+  padding: 10px 24px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  gap: 8px;
+  z-index: 1000;
 }
 
 .bottom-nav a {
   text-decoration: none;
-  color: gray;
+  color: rgba(255, 255, 255, 0.75);
   font-weight: 500;
+  font-size: clamp(0.96rem, 2.5vw, 1.1rem);
+  padding: 8px 18px;
+  border-radius: 12px;
+  transition: all 0.25s ease;
+  white-space: nowrap;
+  letter-spacing: 0.3px;
+}
+
+.bottom-nav a:hover {
+  color: rgba(255, 255, 255, 0.75);
+  background: rgba(255, 255, 255, 0.18);
 }
 
 .bottom-nav a.active {
-  color: #4CAF50;
+  color: rgba(255, 255, 255, 0.75);
+  background: rgba(176, 176, 176, 0.256);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
 }
 
-.easy { background: #4CAF50; }
-  .medium { background: #FF9800; }
-  .hard { background: #F44336; }
+@media (max-width: 768px) {
+  .bottom-nav {
+    bottom: 0;
+    width: 100%;
+    border-radius: 20px 20px 0 0;
+    padding: 12px 8px;
+    border-bottom: none;
+  }
+
+  .bottom-nav a {
+    font-size: 0.85rem;
+    padding: 8px 12px;
+  }
+}
+
+.easy { background: rgba(21, 151, 99, 0.55) }
+.medium { background: rgba(200, 107, 15, 0.578)  }
+.hard { background: rgba(207, 40, 40, 0.55) }
 
 
 /* Responsive Design */
@@ -106,32 +142,8 @@ form {
     padding: 1rem;
   }
 
-  #home, #levels, #game {
+  #home {
     padding: 1rem;
-  }
-
-  .level {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
-  .level-btn {
-    width: 100%;
-  }
-
-  .score-panel {
-    flex-direction: column;
-    gap: 0.5rem;
-    font-size: clamp(0.9rem, 2vw, 1rem);
-  }
-
-  .game-board {
-    gap: clamp(0.5rem, 1vw, 0.8rem);
-  }
-
-  .card {
-    width: clamp(70px, 20vw, 100px);
-    height: clamp(70px, 20vw, 100px);
   }
 }
 
@@ -151,18 +163,32 @@ form {
     font-size: 1rem;
     margin: 15px 0;
   }
+}
 
-  .card {
-    width: clamp(50px, 15vw, 80px);
-    height: clamp(50px, 15vw, 80px);
-  }
+.spinner-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 40px 0;
+}
 
-  .game-board {
-    gap: 0.4rem;
-  }
+.spinner {
+  width: 48px;
+  height: 48px;
+  border: 5px solid rgba(255, 255, 255, 0.25);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
 
-  .victory-box {
-    padding: 1rem;
-    margin: 0 1rem;
-  }
+.spinner-label {
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 1rem;
+  letter-spacing: 0.5px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
