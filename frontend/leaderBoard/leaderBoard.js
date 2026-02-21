@@ -10,8 +10,10 @@ link.href = `../levels/levels.html?playerName=${playerName}`;
 async function fetchLeaderboard(difficulty) {
   try {
     const url = difficulty
-      ? `http://localhost:3000/leaderboard?difficulty=${difficulty}`
-      : `http://localhost:3000/leaderboard`;
+      // ? `http://localhost:3000/leaderboard?difficulty=${difficulty}`
+      // : `http://localhost:3000/leaderboard`;
+      ? `https://hyf-memory-game-pcw7.onrender.com/leaderboard?difficulty=${difficulty}`
+      : `https://hyf-memory-game-pcw7.onrender.com/leaderboard`;
 
     const response = await fetch(url);
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);

@@ -68,13 +68,15 @@ function hideSpinner() {
 }
 
 async function fetchCards(difficulty) {
-    const response = await fetch("http://localhost:3000/cards?difficulty=" + difficulty);
+    // const response = await fetch("http://localhost:3000/cards?difficulty=" + difficulty);
+     const response = await fetch("https://hyf-memory-game-pcw7.onrender.com/cards?difficulty=" + difficulty);
     if (!response.ok) throw new Error("Failed to fetch cards: " + response.status);
     return response.json();
 }
 
 function submitScore(username, score, difficulty) {
-    return fetch("http://localhost:3000/score", {
+    // return fetch("http://localhost:3000/score", {
+    return fetch("https://hyf-memory-game-pcw7.onrender.com/score", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, score, difficulty }),
@@ -107,7 +109,8 @@ function createCardElement(emoji) {
     card.dataset.emojiName = emoji.name;
     card.style.display = "";
     card.style.visibility = "visible";
-    img.src = "http://localhost:3000/" + emoji.image;
+    // img.src = "http://localhost:3000/" + emoji.image;
+    img.src = "https://hyf-memory-game-pcw7.onrender.com/" + emoji.image;
     img.alt = emoji.name;
     inner.classList.remove("flipped");
     inner.addEventListener("click", () => onCardClick(inner));
