@@ -4,6 +4,7 @@ const UI = {
     score: document.getElementById("score"),
     time: document.getElementById("time"),
     board: document.querySelector(".game-board"),
+    spinner: document.getElementById("board-spinner"),
 };
 
 // ---- URL params ----
@@ -54,6 +55,16 @@ function resetClock() {
     clock.seconds = 0;
     clock.started = false;
     UI.time.textContent = 0;
+}
+
+function showSpinner() {
+    if (UI.spinner) UI.spinner.style.display = "flex";
+    if (UI.board)   UI.board.style.visibility = "hidden";
+}
+
+function hideSpinner() {
+    if (UI.spinner) UI.spinner.style.display = "none";
+    if (UI.board)   UI.board.style.visibility = "visible";
 }
 
 async function fetchCards(difficulty) {
@@ -117,9 +128,12 @@ async function renderBoard() {
     UI.board.style.setProperty("--columns", cols);
     UI.board.innerHTML = "";
 
+    showSpinner();
+
     const pairs = await buildCardPairs(totalCards, DIFFICULTY);
     if (state.gameOver) return; // guard: game ended while awaiting
 
+    hideSpinner();
     pairs.forEach(emoji => UI.board.appendChild(createCardElement(emoji)));
 }
 

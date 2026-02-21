@@ -81,11 +81,11 @@ form {
   display: flex;
   justify-content: space-around;
   align-items: center;
-  background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(14px);
+  background: rgba(46, 46, 46, 0.45);
+  backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(14px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.247);
+  border-radius: 16px;
   padding: 10px 24px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
   gap: 8px;
@@ -94,24 +94,24 @@ form {
 
 .bottom-nav a {
   text-decoration: none;
-  color: rgba(56, 55, 55, 0.75);
+  color: rgba(255, 255, 255, 0.75);
   font-weight: 500;
   font-size: 0.95rem;
   padding: 8px 18px;
-  border-radius: 999px;
+  border-radius: 12px;
   transition: all 0.25s ease;
   white-space: nowrap;
   letter-spacing: 0.3px;
 }
 
 .bottom-nav a:hover {
-  color: rgb(46, 46, 46);
+  color: rgba(255, 255, 255, 0.75);
   background: rgba(255, 255, 255, 0.18);
 }
 
 .bottom-nav a.active {
-  color: rgb(46, 46, 46);
-  background: rgba(255, 255, 255, 0.25);
+  color: rgba(255, 255, 255, 0.75);
+  background: rgba(176, 176, 176, 0.256);
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
 }
 
@@ -130,9 +130,9 @@ form {
   }
 }
 
-.easy { background: #4CAF50; }
-  .medium { background: #FF9800; }
-  .hard { background: #F44336; }
+.easy { background: rgba(21, 151, 99, 0.55) }
+.medium { background: rgba(200, 107, 15, 0.578)  }
+.hard { background: rgba(207, 40, 40, 0.55) }
 
 
 /* Responsive Design */
@@ -163,4 +163,32 @@ form {
     font-size: 1rem;
     margin: 15px 0;
   }
+}
+
+.spinner-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 40px 0;
+}
+
+.spinner {
+  width: 48px;
+  height: 48px;
+  border: 5px solid rgba(255, 255, 255, 0.25);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.spinner-label {
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 1rem;
+  letter-spacing: 0.5px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }

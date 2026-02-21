@@ -27,7 +27,7 @@ h1 {
   font-size: clamp(0.9rem, 2.5vw, 1.1rem);
   cursor: pointer;
   flex-shrink: 0;
-  opacity: 0.6;
+  opacity: 0.8;
   transition: 0.3s ease;
   text-align: center;
   font-family: 'Chewy', cursive;
@@ -46,9 +46,9 @@ h1 {
 }
 
 /* Difficulty colours */
-.level-card.easy   { background: #4CAF50; }
+/* .level-card.easy   { background: #4CAF50; }
 .level-card.medium { background: #FF9800; }
-.level-card.hard   { background: #F44336; }
+.level-card.hard   { background: #F44336; } */
 
 /* Leaderboard table container */
 .leaderboard {
