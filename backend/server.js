@@ -27,7 +27,7 @@ await knexInstance.raw(`
   )
 `);
 
-await knexInstance('scores').del();
+// await knexInstance('scores').del();
 
 const existing = await knexInstance("scores").first();
 
